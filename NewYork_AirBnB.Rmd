@@ -1,0 +1,67 @@
+---
+title: <center><b> NewYork AirBnb Analysis and Modelling </b></center>
+author : <center> Sayak Chakraborty | Samreen Zehra | Niharika Gupta | Rohit Thakur </center>
+output: 
+  html_document :
+    code_folding : show
+---
+
+# {.tabset .tabset-fade .tabset-pills}
+
+## 1. Synopsis
+
+
+
+![](Images/NewYork Wallpaper 1.jpg)
+
+#### **Problem Statement**
+This development has been carried out to analyse the various factors that influence the popularity or rank of a particular anime. 
+
+***
+#### **Implementation**
+The data was cleaned and shaped accordingly to carry out the analysis and infer the results.
+
+## 2. Packages Required
+
+```{r Loading the required packages, echo=TRUE, results='hide', message=FALSE}
+library(tidyr)
+library(DT)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(kableExtra)
+library(lubridate)
+library(readxl)
+library(highcharter)
+library(lubridate)
+library(scales)
+library(RColorBrewer)
+library(wesanderson)
+library(plotly)
+library(shiny)
+library(readxl)
+```
+
+```{r displaying the packages table, echo=FALSE}
+#Reading the variable summary excel File
+package_sum <- read_excel('Package_Summary.xlsx')
+
+kable(package_sum) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F, fixed_thead = T, )
+``` 
+
+## 3. Data Preparation {.tabset .tabset-fade .tabset-pills}
+
+### 3.1 Data Source
+
+### 3.2 Data Cleaning
+
+### 3.3 Cleaned Dataset
+
+### 3.4 Summary of Variables
+
+## 4. Exploratory Data Analysis
+
+## 5. Modelling
+
+## 6. Conclusion
