@@ -6,11 +6,7 @@ output:
     code_folding : show
 ---
 
-<style>
-body {
-        text-align: justify
-     }
-</style>
+
 
 ## 1. **Synopsis**
 
@@ -147,6 +143,11 @@ naniar::gg_miss_var(airbnb_data) +
 
 The final cleaned dataset can be found below in an interactive table.
 
+<!-- ```{r Cleaned Dataset, echo=TRUE, warning=FALSE} -->
+<!-- data_show <- head(airbnb_data, 10) -->
+
+<!--  datatable(data_show, filter = 'top') -->
+<!-- ``` -->
 
 ****
 
@@ -231,6 +232,13 @@ nrow(airbnb_train) + nrow(airbnb_test) == nrow(airbnb_data %>% filter(price > 0)
 ```
 ****
 
+<!-- ### Check the Correlation between the variables -->
+<!-- ```{r Correlation Plot, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'} -->
+
+<!-- M <-cor(airbnb_train) -->
+<!-- corrplot(M, type="upper", order="hclust", -->
+<!--          col=brewer.pal(n=8, name="RdYlBu")) -->
+<!-- ``` -->
 
 ### 5.2 Model Building Process
 
