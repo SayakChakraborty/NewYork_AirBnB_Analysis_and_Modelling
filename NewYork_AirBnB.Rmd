@@ -1,9 +1,12 @@
 ---
-title: <center><b> New York AirBnb Analysis and Modelling </b></center>
-author : <center> Sayak Chakraborty | Samreen Zehra | Niharika Gupta | Rohit Thakur </center>
-output: 
-  html_document :
-    code_folding : show
+title: "<center><b> New York AirBnb Analysis and Modelling </b></center>"
+author: <center> Sayak Chakraborty | Samreen Zehra | Niharika Gupta | Rohit Thakur
+  </center>
+output:
+  word_document: default
+  html_document:
+    code_folding: show
+always_allow_html: yes
 ---
 
 <style>
@@ -147,6 +150,12 @@ naniar::gg_miss_var(airbnb_data) +
 
 The final cleaned dataset can be found below in an interactive table.
 
+
+```{r Datatable, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center' }
+
+datatable(head(airbnb_data, 20), class = 'cell-border stripe')
+
+```
 
 ****
 
