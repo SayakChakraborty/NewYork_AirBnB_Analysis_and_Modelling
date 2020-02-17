@@ -1,11 +1,12 @@
 ---
-title: "<center><b> New York AirBnb Analysis and Modelling </b></center>"
+title: "<center><b> New York AirBnB \\ Exploratory Data Analysis and Modelling </b></center>"
+subtitle: "<center><b> Price Prediction for AirBnbs in New York </b></center>"
 author: <center> Sayak Chakraborty | Samreen Zehra | Niharika Gupta | Rohit Thakur
   </center>
 output:
-  word_document: default
   html_document:
     code_folding: show
+  word_document: default
 always_allow_html: yes
 ---
 
@@ -14,6 +15,8 @@ body {
         text-align: justify
      }
 </style>
+
+# {.tabset .tabset-fade .tabset-pills}
 
 ## 1. **Synopsis**
 
@@ -94,7 +97,7 @@ kable(package_summary) %>%
 
 ****
 
-## 3. **Data Preparation** 
+## 3. **Data Preparation** {.tabset .tabset-fade .tabset-pills}
 
 ### 3.1 Loading and Reading the Data 
 
@@ -137,6 +140,7 @@ We visualise the number of missings in each variable using naniar `gg_miss_var`
 naniar::gg_miss_var(airbnb_data) +
   theme_minimal()+
   labs(y = "Look at all the Missing Values") 
+
 ```
 
 
@@ -172,13 +176,11 @@ kable(var_sum) %>%
 
 ****
 
-## 4. **Exploratory Data Analysis**
+## 4. **Exploratory Data Analysis** 
 
 
 
-
-
-
+### Which Type of Listings are there in the Neighbourhood?
 
 ```{r Spatial Data 1.4, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 property_df <-  airbnb_data %>% 
@@ -212,46 +214,131 @@ ggplot(property_ratio, aes(x=neighbourhood_group, y = ratio, fill = room_type)) 
           xlab("Neighborhood") + ylab("Percentage")
 ```
 
+### Mean Price Comparison for each Neighbourhood Group
+
+```{r Price vs Neighbourhood Group}
+airbnb_data %>% 
+  filter(!(is.na(neighbourhood_group))) %>% 
+  filter(!(neighbourhood_group == "Unknown")) %>% 
+  group_by(neighbourhood_group) %>% 
+  summarise(mean_price = mean(price, na.rm = TRUE)) %>% 
+  ggplot(aes(x = reorder(neighbourhood_group, mean_price), y = mean_price, fill = neighbourhood_group)) +
+  geom_col(stat ="identity", color = "black", fill="#357b8a") +
+  coord_flip() +
+  theme_gray() +
+  labs(x = "Neighbourhood Group", y = "Price") +
+  geom_text(aes(label = round(mean_price,digit = 2)), hjust = 2.0, color = "white", size = 3.5) +
+  ggtitle("Mean Price comparision for each Neighbourhood Group", subtitle = "Price vs Neighbourhood Group") + 
+  xlab("Neighbourhood Group") + 
+  ylab("Mean Price") +
+  theme(legend.position = "none",
+        plot.title = element_text(color = "black", size = 14, face = "bold", hjust = 0.5),
+        plot.subtitle = element_text(color = "darkblue", hjust = 0.5),
+        axis.title.y = element_text(),
+        axis.title.x = element_text(),
+        axis.ticks = element_blank())
+```
+
+### Mean Price Comparison for each Room Type
+
+```{r Price vs Room Type}
+airbnb_data %>% 
+  filter(!(is.na(room_type))) %>% 
+  filter(!(room_type == "Unknown")) %>% 
+  group_by(room_type) %>% 
+  summarise(mean_price = mean(price, na.rm = TRUE)) %>% 
+  ggplot(aes(x = reorder(room_type, mean_price), y = mean_price, fill = room_type)) +
+  geom_col(stat ="identity", color = "black", fill="#357b8a") +
+  coord_flip() +
+  theme_gray() +
+  labs(x = "Room Type", y = "Price") +
+  geom_text(aes(label = round(mean_price,digit = 2)), hjust = 2.0, color = "white", size = 3.5) +
+  ggtitle("Mean Price comparision with all Room Types", subtitle = "Price vs Room Type") + 
+  xlab("Room Type") + 
+  ylab("Mean Price") +
+  theme(legend.position = "none",
+        plot.title = element_text(color = "black", size = 14, face = "bold", hjust = 0.5),
+        plot.subtitle = element_text(color = "darkblue", hjust = 0.5),
+        axis.title.y = element_text(),
+        axis.title.x = element_text(),
+        axis.ticks = element_blank())
+```
 
 
-
-## 5. **Modelling**
+## 5. **Modelling** {.tabset .tabset-fade .tabset-pills}
 
 
 ### 5.1 Data Splitting
 
-Training set will be 70% percent of the original data. Objects with price equal to 0 will be ommited since price can’t be 0 (faulty records). They would make predictive models significantly weaker.
+
+We are filtering the airbnb data by removing the extreme values of price from both sides (10% from both the end).
+```{r remove the outliers in Price, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center',}
+
+airbnb_filtered_data <- airbnb_data %>% 
+  filter(price < quantile(airbnb_data$price, 0.9) & price > quantile(airbnb_data$price, 0.1)) %>% 
+  drop_na()
+
+```
+
+
+As, it is a good practice, we are splitting the dataset in to parts in the ratio of 70:30. Training set will be 70% percent of the original data. Objects with price equal to 0 will be ommited since price can’t be 0 (faulty records). They would make predictive models significantly weaker. We will use the test dataset in the future for testing and prediction purposes.
 
 ```{r Splitting the Data for Training and Testing, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
 
-airbnb_data <- airbnb_data %>% mutate(id = row_number())
+set.seed(123456)
 
-airbnb_train <- airbnb_data %>% sample_frac(.7) %>% filter(price > 0)
+airbnb_filtered_data <- airbnb_filtered_data %>% mutate(id = row_number())
 
-airbnb_test  <- anti_join(airbnb_data, airbnb_train, by = 'id') %>% filter(price > 0)
+airbnb_train <- airbnb_filtered_data %>% sample_frac(.7) %>% filter(price > 0)
+
+airbnb_test  <- anti_join(airbnb_filtered_data, airbnb_train, by = 'id') %>% filter(price > 0)
 
 ```
+
 
 ```{r Sanity Check, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center' }
 
 # sanity check
-nrow(airbnb_train) + nrow(airbnb_test) == nrow(airbnb_data %>% filter(price > 0))
+nrow(airbnb_train) + nrow(airbnb_test) == nrow(airbnb_filtered_data %>% filter(price > 0))
 
 ```
+
+
+
 ****
 
 
-### 5.2 Model Building Process
+### 5.2 Model Building Process {.tabset .tabset-fade .tabset-pills}
 
 #### 5.2.1 1st Linear Regression Model
 ```{r 1st Linear Regression Model, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
 airbnb_model_1 <- lm (price ~ latitude + longitude + room_type + minimum_nights  + availability_365 + neighbourhood_group, data = airbnb_train)
 
-summary(airbnb_model_1)
+summary_model_1 <- summary(airbnb_model_1)
+mse_1 <- summary_model_1$sigma^2
+r_sq_1 <- summary_model_1$r.squared
+adj_r_sq_1 <- summary_model_1$adj.r.squared
+
+summary_model_1
+
+```
+```{r Model 1 Observations,}
+
+cat("Model 1 Observations: \n")
+cat("MSE:" , mse_1 , "\n")
+cat("R-squared:", r_sq_1, "\n")
+cat("Adjusted R-squared:", adj_r_sq_1, "\n")
+
 ```
 
 
-#### Plot of the 1st Linear Regression Model
+Model 1 Observations: 
+
+* MSE: 1659.508  
+* R-squared: 0.4431313
+* Adjusted R-squared: 0.4428791 
+
+**Plot of the 1st Linear Regression Model**
 ```{r Linear Regression Model 1, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
 
 plot(airbnb_model_1)
@@ -260,78 +347,290 @@ plot(airbnb_model_1)
 
 ****
 
+#### 5.2.2 **Transformation** - 2nd Linear Regression Model
 
-#### 5.2.2 **Transformation** - 2nd Linear Regression Model -
-```{r remove the outliers in Price, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center',}
-
-airbnb_data_2 <- airbnb_train %>% 
-  filter(price < quantile(airbnb_train$price, 0.9) & price > quantile(airbnb_train$price, 0.1)) %>% 
-  drop_na()
-
-```
 
 ```{r Transformation - log(y), echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
 
 airbnb_model_2 <- lm(log(price) ~ room_type + neighbourhood_group + latitude + longitude + number_of_reviews + availability_365 
-                     + reviews_per_month + calculated_host_listings_count + minimum_nights, data = airbnb_data_2)
+                     + reviews_per_month + calculated_host_listings_count + minimum_nights, data = airbnb_train)
 
-# Summarize the results
-summary(airbnb_model_2)
+
+
+summary_model_2 <- summary(airbnb_model_2)
+mse_2 <- summary_model_2$sigma^2
+r_sq_2 <- summary_model_2$r.squared
+adj_r_sq_2 <- summary_model_2$adj.r.squared
+
+summary_model_2
+
+cat("Model 2 Observations: \n")
+cat("MSE:" , mse_2 , "\n")
+cat("R-squared:", r_sq_2, "\n")
+cat("Adjusted R-squared:", adj_r_sq_2, "\n")
 
 ```
 
+Model 2 Observations: 
+
+* MSE: 0.1020295 
+* R-squared: 0.4969679 
+* Adjusted R-squared: 0.4966717 
+
 ****
 
-#### Plot of the Transformed Linear Regression Model
+ Plot of the Transformed Linear Regression Model
 ```{r Plot the Log Model, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
 plot(airbnb_model_2)
 ```
 
 
-#### 5.2.3 Model Building by **Variable Selection** Method
+#### 5.2.3 **Variable Selection Method** {.tabset .tabset-fade .tabset-pills}
 
-#### **Best Subset Regression Method**
+##### **Best Subset Regression Method**
 ```{r Model Selection Method 1, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
-best_fit_model <- regsubsets (log(price) ~ room_type + neighbourhood_group + latitude + longitude + number_of_reviews + availability_365 
-                     + reviews_per_month + calculated_host_listings_count + minimum_nights, data = airbnb_data_2, nbest = 2, nvmax = 9)
+best_fit_model <- regsubsets (price ~ room_type + neighbourhood_group + latitude + longitude + number_of_reviews + availability_365 
+                     + reviews_per_month + calculated_host_listings_count + minimum_nights, data = airbnb_train, nbest = 2, nvmax = 9)
 
 summary(best_fit_model)
 
 ```
 
+
 ```{r Plot BFM, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center',}
 plot(best_fit_model, scale="bic")
 ```
 
+The Covariates that we have to select here are:
+
+* room_type
+* neighbourhood_group
+* longitude
+* availablity_365
+* calculated_host_listings_count
+* availablity_365
+* minimum_nights
+
+Hence, we create a model using the the above mentioned covariates
+
+```{r Best Subset Model,}
+
+airbnb_model_3 <- lm (price ~ room_type + neighbourhood_group  + longitude  + availability_365 + calculated_host_listings_count + 
+                        minimum_nights, data = airbnb_train, nbest = 2, nvmax = 9)
+
+
+
+summary_model_3 <- summary(airbnb_model_3)
+mse_3 <- summary_model_3$sigma^2
+r_sq_3 <- summary_model_3$r.squared
+adj_r_sq_3 <- summary_model_3$adj.r.squared
+
+summary_model_3
+
+```
+
+```{r Display Model 3 Summary,}
+cat("Model 3 Observations: \n")
+cat("MSE:" , mse_3 , "\n")
+cat("R-squared:", r_sq_3, "\n")
+cat("Adjusted R-squared:", adj_r_sq_3, "\n")
+```
+
+Model 3 Observations: 
+
+* MSE: 1659.163 
+* R-squared: 0.4432468
+* Adjusted R-squared: 0.4429946 
+
 ****
 
-#### Model Building by **Stepwise Regression with AIC/BIC** (direction = forward/backward/both)
 
-#### **stepwise selection using AIC** (Direction = "both")
+##### **Stepwise Regression with AIC/BIC** {.tabset .tabset-fade .tabset-pills}
+
+###### **Stepwise selection using AIC** (Direction = "both")
 ```{r stepwise selection using AIC}
 
-null <- lm(log(price)~1, data = airbnb_train)
-full <- lm(log(price) ~ room_type + neighbourhood_group + latitude + longitude + number_of_reviews + availability_365 
+null <- lm(price~1, data = airbnb_train)
+full <- lm(price ~ room_type + neighbourhood_group + latitude + longitude + number_of_reviews + availability_365 
                      + reviews_per_month + calculated_host_listings_count + minimum_nights, data = airbnb_train)
 
 step(null, scope =list(lower=null, upper= full), direction = "both")
 
 ```
 
+The covariates given by this fit are as follows:
 
-#### **stepwise selection using BIC** (Direction = "both")
+* room_type
+* neighbourhood_group
+* longitude 
+* availability_365
+* calculated_host_listings_count
+* minimum_nights
+* latitude
+* number_of_reviews
+
+Hence, Building a Model using this co variates:
+```{r AIC Model,}
+
+airbnb_model_4 <- lm(price ~ room_type + neighbourhood_group + longitude + availability_365 + calculated_host_listings_count + minimum_nights + latitude + number_of_reviews, 
+                     data = airbnb_train, nbest = 2, nvmax = 9)
+
+
+summary_model_4 <- summary(airbnb_model_4)
+mse_4 <- summary_model_4$sigma^2
+r_sq_4 <- summary_model_4$r.squared
+adj_r_sq_4 <- summary_model_4$adj.r.squared
+
+summary_model_4
+
+```
+
+```{r Display Model 4 Summary,}
+cat("Model 4 Observations: \n")
+cat("MSE:" , mse_4 , "\n")
+cat("R-squared:", r_sq_4, "\n")
+cat("Adjusted R-squared:", adj_r_sq_4, "\n")
+```
+ Model 4 Observations:
+ 
+* MSE: 1651.064
+* R-squared: 0.4460147
+* Adjusted R-squared: 0.4457136
+
+###### **stepwise selection using BIC** (Direction = "both")
 
 ```{r stepwise selection using BIC}
 
-null <- lm(log(price)~1, data = airbnb_train)
-full <- lm(log(price) ~ room_type + neighbourhood_group + latitude + longitude + number_of_reviews + availability_365 
+null <- lm(price~1, data = airbnb_train)
+full <- lm(price ~ room_type + neighbourhood_group + latitude + longitude + number_of_reviews + availability_365 
                      + reviews_per_month + calculated_host_listings_count + minimum_nights, data = airbnb_train)
 
 n=dim(airbnb_train[1])
 step(null, scope =list(lower=null, upper= full), k=log(n), direction = "both")
 
 ```
+
+The covariates given by this fit are as follows:
+
+* room_type
+* neighbourhood_group
+* longitude
+* availability_365
+* calculated_host_listings_count
+* minimum_nights
+* latitude
+* number_of_reviews
+* reviews_per_month
+
+Hence, Building a Model using this co variates:
+```{r BIC Model 5,}
+
+airbnb_model_5 <- lm(price ~ room_type + neighbourhood_group + longitude + availability_365 + minimum_nights + latitude + calculated_host_listings_count + 
+  number_of_reviews + reviews_per_month, data = airbnb_train, nbest = 2, nvmax = 9)
+
+
+summary_model_5 <- summary(airbnb_model_5)
+mse_5 <- summary_model_5$sigma^2
+r_sq_5 <- summary_model_5$r.squared
+adj_r_sq_5 <- summary_model_5$adj.r.squared
+
+summary_model_5
+
+```
+
+
+```{r Display Model 5 Summary,}
+cat("Model 5 Observations: \n")
+cat("MSE:" , mse_5 , "\n")
+cat("R-squared:", r_sq_5, "\n")
+cat("Adjusted R-squared:", adj_r_sq_5, "\n")
+```
+
+Model 5 Observations: 
+* MSE:  1651.127
+* R-squared: 0.4460188 
+* Adjusted R-squared: 0.4456926 
+
+***
+
+
+
+
+##### **Lasso Regression Method**
+
+
+
+```{r Lasso Regression Method}
+
+lasso_fit <- glmnet(x = as.matrix(airbnb_train[, -c(which(colnames(airbnb_train) %in% c("room_type", "neighbourhood_group","price", "name", "host_name", 
+                                                                                        "neighbourhood", "last_review", "host_id", "id")))]), 
+                    y = airbnb_train$price, alpha = 0.5)
+
+coef(lasso_fit,s = lasso_fit$lambda.min)
+
+
+```
+
+The covariates given out by this model are :
+
+* latitude                        
+* longitude                      
+* minimum_nights                 
+* number_of_reviews              
+* reviews_per_month              
+* calculated_host_listings_count  
+* availability_365           
+
+Hence, Building a Model using this covariates
+```{r Lasso Fit Model 6,}
+
+airbnb_model_6 <- lm(price ~ latitude + longitude + minimum_nights + number_of_reviews + reviews_per_month + calculated_host_listings_count + availability_365,
+                     data = airbnb_train, nbest = 2, nvmax = 9)
+
+
+summary_model_6 <- summary(airbnb_model_6)
+mse_6 <- summary_model_6$sigma^2
+r_sq_6 <- summary_model_6$r.squared
+adj_r_sq_6 <- summary_model_6$adj.r.squared
+
+summary_model_6
+
+```
+
+```{r Display Model 6 Summary,}
+cat("Model 6 Observations: \n")
+cat("MSE:" , mse_6 , "\n")
+cat("R-squared:", r_sq_6, "\n")
+cat("Adjusted R-squared:", adj_r_sq_6, "\n")
+```
+
+```{r Cross Validation of Lasso Fit}
+cv_lasso_fit = cv.glmnet(x = as.matrix(airbnb_train[, -c(which(colnames(airbnb_train) %in% c("room_type", "neighbourhood_group","price" , "name", "host_name",
+                                                                                                          "neighbourhood", "last_review")))]), 
+                    y = airbnb_train$price, alpha = 1, nfolds = 5)
+plot(cv_lasso_fit)
+```
+
+
+### 5.3. **Model Selection**
+
+### 5.4 **Prediction**
+
+Comparison of all the Models:
+
+```{r Comparison of Models, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center'}
+
+
+
+#Reading the variable summary excel File
+model_sum <- read_excel("Model_Comparison.xlsx")
+
+kable(model_sum) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F, fixed_thead = T, )
+```
+
+
 
 
 ## 6. **Conclusion**
