@@ -744,4 +744,4 @@ Comparing the MSE of Test Dataset which is equal to 1633, and the MSPE of the Fu
 
 <h2> Final Equation </h2>
 
-$price = -1.47e+04 + (-6.16e+01) * RoomTypePrivateRoom + (-7.45e+01) * RoomTypeSharedRoom + (-7.08e+00) * NeighbourhodGroupBrooklyn + (1.68e+01) * NeighbourhodGroupManhattan + (3.64e+00) * NeighbourhodGroupQueens + (-7.20e+01) * NeighbourhoodGroupStatenIsland + (-2.43e+02) * Longitude + (4.37e-02) * Availability_365 + (-1.92e-01) * MinimumNights + (-7.72e+01) * Latitude + (1.06e-01) * CalculatedHostListingsCount + (-2.48e-02) * NumberOfReviews + (-8.30e-02) * ReviewsPerMonth$
+**price = -1.47e+04 + (-6.16e+01) * RoomTypePrivateRoom + (-7.45e+01) * RoomTypeSharedRoom + (-7.08e+00) * NeighbourhodGroupBrooklyn + (1.68e+01) * NeighbourhodGroupManhattan  + (3.64e+00) * NeighbourhodGroupQueens + (-7.20e+01) * NeighbourhoodGroupStatenIsland + (-2.43e+02) * Longitude + (4.37e-02) * Availability_365 + (-1.92e-01) * MinimumNights + (-7.72e+01) * Latitude + (1.06e-01) * CalculatedHostListingsCount + (-2.48e-02) * NumberOfReviews + (-8.30e-02) * ReviewsPerMonth**
