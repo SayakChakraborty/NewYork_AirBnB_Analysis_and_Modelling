@@ -1,10 +1,13 @@
 ---
 title: "<center><b> New York AirBnB <br> Exploratory Data Analysis and Modelling </b></center>"
 subtitle: "<center><b> Price Prediction for AirBnbs in New York </b></center>"
-author: <center> Sayak Chakraborty | Samreen Zehra | Niharika Gupta | Rohit Thakur </center>
+author: <center> Sayak Chakraborty | Samreen Zehra | Niharika Gupta | Rohit Thakur
+  </center>
 output:
-  html_document: 
+  word_document: default
+  html_document:
     code_folding: show
+
 always_allow_html: yes
 ---
 
@@ -18,7 +21,7 @@ body {
 
 ## 1. **Synopsis**
 
-The Data was collected from [**Kaggle**](https://www.kaggle.com/). In this project we present to you exploratory data analysis, visualizations and modelling of New York Airbnb data. Airbnb, Inc.is an online marketplace for arranging or offering lodging, primarily homestays, or tourism experiences. The company does not own any of the real estate listings, nor does it host events; it acts as a broker, receiving commissions from each booking. Revenue for Airbnb comes from its guests and hosts: hosts are charged 3% of the value of the booking, while guests are charged 6%-12% per the nature of the booking. Airbnb market is quite blooming in New York city (NYC) which had more than 48,000 listings as of August-2019 calendar year.
+The Data was collected from [**Kaggle**](https://www.kaggle.com/). In this project we present to you exploratory data analysis, visualizations of New York Airbnb data. Airbnb, Inc.is an online marketplace for arranging or offering lodging, primarily homestays, or tourism experiences. The company does not own any of the real estate listings, nor does it host events; it acts as a broker, receiving commissions from each booking. Revenue for Airbnb comes from its guests and hosts: hosts are charged 3% of the value of the booking, while guests are charged 6%-12% per the nature of the booking. Airbnb market is quite blooming in New York city (NYC) which had more than 48,000 listings as of August-2019 calendar year.
 
 We focus on New York City’s data as we wish to perform an in-depth analysis on one of the most densely populated cities in the world. 
 
@@ -44,7 +47,7 @@ The original Data Set can be found here ---> [**New York AirBnB Data 2019**](htt
 ## 2. **Packages Required**
 We begin by loading the packages that will be required throughout the course of our analysis.
 
-```{r Loading the required packages, results='hide', echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r Loading the required packages, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 #install DAAG from archived source
 if(!is.element("DAAG", installed.packages()[,1])){
@@ -92,7 +95,7 @@ library(boot)
 
 The packages used can be found in a tabular format below. The table also describes the usage of each packages that we are using.
 
-```{r displaying the packages table, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r displaying the packages table, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 #Reading the variable summary excel File
 package_summary <- read_excel("Package_Summary.xlsx")
 
@@ -109,7 +112,7 @@ After loading the required packages, we move on to the data perparation step whi
 
 ### 3.1 Loading and Reading the Data 
 
-```{r Loading the data, echo=FALSE, include=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r Loading the data, echo=FALSE, include=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 airbnb_data <- data.table::fread("new_york_city_airbnb_open_data/AB_NYC_2019.csv")
 str(airbnb_data)
@@ -118,14 +121,14 @@ str(airbnb_data)
 
 <!-- #### Converting the character variables to Factor Variables -->
 
-```{r Converting character variables to Factor, echo=FALSE, include=FALSE, message=FALSE, warning=FALSE, fig.align='center' }
+```{r Converting character variables to Factor, echo=FALSE, include=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 airbnb_data <- data.frame(airbnb_data)
 
 airbnb_data <- mutate_if(airbnb_data, is.character, as.factor)
 ```
 
 <h2> Summary and Glimpse of the Data </h2>
-```{r Summary and Glimpse of the Data, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r Summary and Glimpse of the Data, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 summary(airbnb_data)
 
@@ -143,7 +146,7 @@ glimpse(airbnb_data)
 <h2> Checking for NA </h2>
 
 Next we will check for missing values and deal with them accordingly. 
-```{r Checking for NA, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r Checking for NA, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 summary(is.na(airbnb_data))
 
@@ -151,7 +154,7 @@ summary(is.na(airbnb_data))
 
 
 We visualise the number of missings in each variable using naniar `gg_miss_var`
-```{r Visualizing the Missing Values, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center' }
+```{r Visualizing the Missing Values, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center' }
 
 naniar::gg_miss_var(airbnb_data) +
   theme_minimal()+
@@ -176,7 +179,7 @@ The Original Dataset [**New York AirBnB Data 2019**](https://www.kaggle.com/dgom
 The final cleaned dataset can be found below in an interactive table.
 
 
-```{r Datatable, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center' }
+```{r Datatable, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='hide' }
 
 datatable(head(airbnb_data, 20), class = 'cell-border stripe')
 
@@ -186,7 +189,7 @@ datatable(head(airbnb_data, 20), class = 'cell-border stripe')
 
 ### 3.4 Summary of Variables
 
-```{r displaying the summary variables table, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center'}
+```{r displaying the summary variables table, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 #Reading the variable summary excel File
 var_sum <- read_excel("variable_summary.xlsx")
@@ -205,7 +208,7 @@ kable(var_sum) %>%
 
 We do an analysis to find out the type of listings that are common to a particular neighbourhood.
 
-```{r Neighbourhood Property, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r Neighbourhood Property, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 property_df <-  airbnb_data %>% 
   group_by(neighbourhood_group, room_type) %>% 
   summarize(Freq = n())
@@ -248,7 +251,7 @@ ggplot(property_ratio, aes(x=neighbourhood_group, y = ratio, fill = room_type)) 
 We want to see the average prices of listing in every neighbourhood.
 
 
-```{r Price vs Neighbourhood Group, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r Price vs Neighbourhood Group, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='markup'}
 airbnb_data %>% 
   filter(!(is.na(neighbourhood_group))) %>% 
   filter(!(neighbourhood_group == "Unknown")) %>% 
@@ -277,7 +280,7 @@ airbnb_data %>%
 
 <h2> Mean Price Comparison for each Room Type </h2>
 
-```{r Price vs Room Type, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r Price vs Room Type, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='markup'}
 airbnb_data %>% 
   filter(!(is.na(room_type))) %>% 
   filter(!(room_type == "Unknown")) %>% 
@@ -313,7 +316,7 @@ airbnb_data %>%
 Prior to modelling, we will split the data into Training set and Testing set so that we can use the testing set to validate our model. As it is a good practice, we are splitting the dataset in to parts in the ratio of 70:30. Training set will be 70% percent of the original data. We will use the test dataset in the future for testing and prediction purposes. Objects with price equal to 0 will be ommited since price can’t be 0 (faulty records). In order to remove the outliers, we are filtering the airbnb data by removing the extreme values of price from both sides (10% from both the end).They would make predictive models significantly weaker. 
 
 
-```{r remove the outliers in Price, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center',}
+```{r remove the outliers in Price, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 airbnb_filtered_data <- airbnb_data %>% 
   filter(price < quantile(airbnb_data$price, 0.9) & price > quantile(airbnb_data$price, 0.1)) %>% 
@@ -323,7 +326,7 @@ airbnb_filtered_data <- airbnb_data %>%
 
 
 
-```{r Splitting the Data for Training and Testing, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r Splitting the Data for Training and Testing, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 set.seed(123456)
 
@@ -336,7 +339,7 @@ airbnb_test  <- anti_join(airbnb_filtered_data, airbnb_train, by = 'id') %>% fil
 ```
 
 
-```{r Sanity Check, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center' }
+```{r Sanity Check, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center' , results='hide'}
 
 # sanity check
 nrow(airbnb_train) + nrow(airbnb_test) == nrow(airbnb_filtered_data %>% filter(price > 0))
@@ -394,6 +397,7 @@ adj_r_sq_1 <- summary_model_1$adj.r.squared
 summary_model_1
 
 ```
+
 ```{r Model 1 Observations, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='hide' }
 
 cat("Model 1 Observations: \n")
@@ -411,7 +415,7 @@ cat("Adjusted R-squared:", adj_r_sq_1, "\n")
 * Adjusted R-squared: 0.446
 
 <h2> **Plot of the 1st Linear Regression Model** </h2>
-```{r Linear Regression Model 1, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r Linear Regression Model 1, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 
 par(mfrow=c(2,2)) 
 plot(airbnb_model_1)
@@ -442,7 +446,7 @@ summary(best_fit_model)
 ```
 
 
-```{r Plot BFM, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', }
+```{r Plot BFM, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', }
 plot(best_fit_model, scale="bic")
 ```
 
@@ -498,7 +502,7 @@ cat("Adjusted R-squared:", adj_r_sq_3, "\n")
 ##### **Stepwise Regression with AIC/BIC** {.tabset .tabset-fade .tabset-pills}
 
 ###### **Stepwise selection using AIC** (Direction = "both")
-```{r stepwise selection using AIC, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center',}
+```{r stepwise selection using AIC, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 null <- lm(price~1, data = airbnb_train)
 full <- lm(price ~ neighbourhood_group + latitude + longitude + room_type + minimum_nights  + number_of_reviews + 
@@ -520,7 +524,7 @@ The covariates given by this fit are as follows:
 * number_of_reviews
 
 Hence, Building a Model using this co variates:
-```{r AIC Model, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='hide' }
+```{r AIC Model, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='hide', results='hide' }
 
 airbnb_model_4 <- lm(price ~ room_type + neighbourhood_group + longitude + availability_365 + calculated_host_listings_count + minimum_nights + latitude + number_of_reviews, 
                      data = airbnb_train, nbest = 2, nvmax = 9)
@@ -551,7 +555,7 @@ cat("Adjusted R-squared:", adj_r_sq_4, "\n")
 
 
 
-```{r stepwise selection using BIC, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center',  }
+```{r stepwise selection using BIC, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center',results='hide'  }
 
 null <- lm(price~1, data = airbnb_train)
 full <- lm(price ~ neighbourhood_group + latitude + longitude + room_type + minimum_nights  + number_of_reviews + 
@@ -612,7 +616,7 @@ cat("Adjusted R-squared:", adj_r_sq_5, "\n")
 
 Next we use the Lasso Regression method for variable selection.
 
-```{r Lasso Regression Method, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup' }
+```{r Lasso Regression Method, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center',results='hide' }
 
 lasso_fit <- glmnet(x = as.matrix(airbnb_train[, -c(which(colnames(airbnb_train) %in% c("room_type", "neighbourhood_group","price", "name", "host_name", 
                                                                                         "neighbourhood", "last_review", "host_id", "id")))]), 
@@ -634,7 +638,7 @@ The covariates given out by this fit are:
 * availability_365           
 
 Hence, we will build a Model using these covariates
-```{r Lasso Fit Model 6,  echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup' }
+```{r Lasso Fit Model 6,  echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='hide' }
 
 airbnb_model_6 <- lm(price ~ latitude + longitude + minimum_nights + number_of_reviews + reviews_per_month + calculated_host_listings_count + availability_365,
                      data = airbnb_train, nbest = 2, nvmax = 9)
@@ -664,7 +668,7 @@ cat("Adjusted R-squared:", adj_r_sq_6, "\n")
 * Adjusted R-squared: 0.0978 
 
 Cross Validation of Lasso Fit:
-```{r Cross Validation of Lasso Fit, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r Cross Validation of Lasso Fit, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 cv_lasso_fit = cv.glmnet(x = as.matrix(airbnb_train[, -c(which(colnames(airbnb_train) %in% c("room_type", "neighbourhood_group","price" , "name", "host_name",
                                                                                                           "neighbourhood", "last_review")))]), 
                     y = airbnb_train$price, alpha = 1, nfolds = 5)
@@ -679,7 +683,7 @@ In order to pick a model from the ones that we have built, we will do a comparis
 
 <h2> Comparison of all the Models: </h2>
 
-```{r Comparison of Models, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r Comparison of Models, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 
 
@@ -696,13 +700,9 @@ kable(model_sum) %>%
 2. The linear model built using stepwise regression using both AIC and BIC have the best combination of MSE and Adjusted R-squared and these values are same for both of them. However, we are selecting the ``` **Model 5** (stepwise regression using BIC)``` as BIC is considered to be more **Conservative** and it gives the Lesser number of Variables when compared to AIC, thus making the model more interpretable.
 
 <h2> Summary of Model 5 </h2>
-```{r BIC Model 5 Selected, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', }
-
+```{r BIC Model 5 Selected, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center',}
 
 summary_model_5 <- summary(airbnb_model_5)
-mse_5 <- summary_model_5$sigma^2
-r_sq_5 <- summary_model_5$r.squared
-adj_r_sq_5 <- summary_model_5$adj.r.squared
 
 summary_model_5
 
@@ -714,7 +714,7 @@ summary_model_5
 <h2>In-sample model evaluation (train error)</h2>
 
 <h3> MSE of the Final Selected Model </h3>
-```{r MSE of Final Model, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r MSE of Final Model, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
 
 (summary_model_5$sigma)^2
 
@@ -722,14 +722,14 @@ summary_model_5
 
 
 <h3> R2 of the Final Selected Model </h3>
-```{r r2 of Final Model, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r r2 of Final Model, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
 
 summary_model_5$r.squared
 
 ```
 
 <h3> Adjusted R2 of the Final Selected Model </h3>
-```{r adj r2 of Final Model, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r adj r2 of Final Model, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
 
   summary_model_5$adj.r.squared
 
@@ -740,7 +740,7 @@ summary_model_5$r.squared
 
 To evaluate how the model performs on future data, we use predict() to get the predicted values from the test set.
 
-```{r prediction on test dataset, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r prediction on test dataset, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
 #pi is a vector that contains predicted values for test set.
 pi <- predict(object = airbnb_model_5, newdata = airbnb_test)
 ```
@@ -748,7 +748,7 @@ pi <- predict(object = airbnb_model_5, newdata = airbnb_test)
 
 <h3>Mean Squared Error (MSE) of the final Model: </h3>
 
-```{r MSE of test dataset, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r MSE of test dataset, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
 mean((pi - airbnb_test$price)^2)
 
 ```
@@ -756,7 +756,7 @@ mean((pi - airbnb_test$price)^2)
 
 <h3>the Mean Absolute Error (MAE) of the Final Model - Test Data. </h3>
 
-```{r MAE of test dataset, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r MAE of test dataset, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
 
 mean(abs(pi - airbnb_test$price))
 
@@ -767,7 +767,7 @@ mean(abs(pi - airbnb_test$price))
 
 <h3> MSPE of the Full Filtered Data </h3>
 
-```{r MSPE of Full Data, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
+```{r MSPE of Full Data, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='markup'}
 model_glm_1 = glm(price~neighbourhood_group + latitude + longitude + room_type + minimum_nights  + number_of_reviews + 
                                  reviews_per_month +calculated_host_listings_count + availability_365,  data = airbnb_filtered_data)
 

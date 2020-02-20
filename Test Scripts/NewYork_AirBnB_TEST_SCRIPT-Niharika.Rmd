@@ -1,10 +1,12 @@
 ---
 title: "<center><b> New York AirBnB <br> Exploratory Data Analysis and Modelling </b></center>"
 subtitle: "<center><b> Price Prediction for AirBnbs in New York </b></center>"
-author: <center> Sayak Chakraborty | Samreen Zehra | Niharika Gupta | Rohit Thakur </center>
+author: <center> Sayak Chakraborty | Samreen Zehra | Niharika Gupta | Rohit Thakur
+  </center>
 output:
-  html_document: 
+  html_document:
     code_folding: show
+  word_document: default
 always_allow_html: yes
 ---
 
@@ -18,9 +20,7 @@ body {
 
 ## 1. **Synopsis**
 
-The Data was collected from [**Kaggle**](https://www.kaggle.com/). In this project we present to you exploratory data analysis, visualizations and modelling of New York Airbnb data. Airbnb, Inc.is an online marketplace for arranging or offering lodging, primarily homestays, or tourism experiences. The company does not own any of the real estate listings, nor does it host events; it acts as a broker, receiving commissions from each booking. Revenue for Airbnb comes from its guests and hosts: hosts are charged 3% of the value of the booking, while guests are charged 6%-12% per the nature of the booking. Airbnb market is quite blooming in New York city (NYC) which had more than 48,000 listings as of August-2019 calendar year.
-
-We focus on New York City’s data as we wish to perform an in-depth analysis on one of the most densely populated cities in the world. 
+The Data was collected from [**Kaggle**](https://www.kaggle.com/). In this project we present to you exploratory data analysis, visualizations of New York Airbnb data. We focus on New York City’s data as we wish to perform an in-depth analysis on one of the most densely populated cities in the world. 
 
 In this project, we also try to predict the factors that affect the pricing of the airbnbs around New York. This includes creating different kind of models, model specification, transformation, variable selection and many more.
 
@@ -42,7 +42,6 @@ The original Data Set can be found here ---> [**New York AirBnB Data 2019**](htt
 
 
 ## 2. **Packages Required**
-We begin by loading the packages that will be required throughout the course of our analysis.
 
 ```{r Loading the required packages, results='hide', echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
 
@@ -90,7 +89,7 @@ library(boot)
 ```
 ***
 
-The packages used can be found in a tabular format below. The table also describes the usage of each packages that we are using.
+The packages that we will be utilizing to carry out our study can be found in a tabular format below. The table  describes the usage of each packages that we are using.
 
 ```{r displaying the packages table, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 #Reading the variable summary excel File
@@ -112,7 +111,6 @@ After loading the required packages, we move on to the data perparation step whi
 ```{r Loading the data, echo=FALSE, include=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 
 airbnb_data <- data.table::fread("new_york_city_airbnb_open_data/AB_NYC_2019.csv")
-str(airbnb_data)
 
 ```
 
@@ -138,7 +136,7 @@ glimpse(airbnb_data)
 
 1. The dataset was imported into R studio and it was found to have 48895 observations and 16 variables.
 2. Data type of all categorical variables was 'Character', thus it was changed to categorical.
-3. Summary statistics reveal 'Entire home or apartment' is the most common type of Airbnb followed by a 'private room'. 'Shared rooms' are the least common. Amongst Neighbourhood groups, Manhattan has the highest number of Air BnB’s followed by Brooklyn. Staten Island has the least number. It also shows that minimum price is 0, mean price is 152.7 and maximum price is 10,000 which is quite unusal, indicating potential ouliers.
+3. Summary statistics reveal 'Entire home or apartment' is the most common type of Airbnb followed by a 'private room'. 'Shared rooms' are the least common. Amongst Neighborhood groups, Manhattan has the highest number of Air BnB’s followed by Brooklyn. Staten Island has the least number. It also shows that minimum price is 0, mean price is 152.7 and maximum price is 10,000 which is quite unusal, indicating potential ouliers.
 
 <h2> Checking for NA </h2>
 
@@ -148,6 +146,7 @@ Next we will check for missing values and deal with them accordingly.
 summary(is.na(airbnb_data))
 
 ```
+
 
 
 We visualise the number of missings in each variable using naniar `gg_miss_var`
@@ -166,8 +165,6 @@ Analysis for missing values shows that there are no missing values in our datase
 ****
 
 ### 3.2 Data Cleaning
-
-The Original Dataset [**New York AirBnB Data 2019**](https://www.kaggle.com/dgomonov/new-york-city-airbnb-open-data) we collected from Kaggle did not need much cleaning. The Data set is almost clean with only one coloumn - ```reviews_per_month``` having 10052 N/A values. Deleting all these observatio now would not be a good solution as it is a high number and would result in biased results. Apart from that, all the variables were properly named and was already in proper case, hence variable need not be renamed. All the character variables were changed to factor variables.
 
 ****
 
@@ -203,9 +200,9 @@ kable(var_sum) %>%
 
 <h2> Which Type of Listings are there in the Neighbourhood? </h2>
 
-We do an analysis to find out the type of listings that are common to a particular neighbourhood.
+We do a  data analysis to find out the type of listings that are common to a particular neighbourhood.
 
-```{r Neighbourhood Property, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r Neighbourhood Property, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 property_df <-  airbnb_data %>% 
   group_by(neighbourhood_group, room_type) %>% 
   summarize(Freq = n())
@@ -239,8 +236,8 @@ ggplot(property_ratio, aes(x=neighbourhood_group, y = ratio, fill = room_type)) 
 
 <h3> Observations </h3>
 
-1. Private room is the most common listing type in all neigbourhoods except Manhattan where Entire Home/apartment is the most common type.
-2. Shared room is the least common in all neigbourhoods.
+1. Private room is the most common listing type in all neigborhoods except Manhattan where Entire Home/aoartment is the most common type.
+2. Shared room is the least common in all neigborhoods.
 
 
 <h2> Mean Price Comparison for each Neighbourhood Group </h2>
@@ -272,8 +269,8 @@ airbnb_data %>%
 ```
 <h3> Observations </h3>
 
-1. Average price of listings is the highest for Manhattan (196.88 USD) followed by Brookyln (124.28). One possible reason for high average price in Manhattan could be that whole apartments/home are the most common type of listings there.
-2. Bronx has the cheapest listings with an average price of 87.5 USD.
+1. Average price of listings is the highest for Manhattan (196.88 USD) followed by Brookyln (124.28). One possible reason for high average price in Manhattan could also be that whole apartments/home are the most common type of listings there.
+2. Bronx has the cheapest listings with an average price od 87.5 USD.
 
 <h2> Mean Price Comparison for each Room Type </h2>
 
@@ -302,7 +299,7 @@ airbnb_data %>%
 
 <h3> Observations </h3>
 
-1. Average price is the highest for Entire home.apartment followed by private room and shared room which is quite expected.
+1. Average price is the highest for Entire home.apartment followed by private room and shared room which is pretty obvious.
 
 ## 5. **Modelling** {.tabset .tabset-fade .tabset-pills}
 
@@ -310,7 +307,7 @@ airbnb_data %>%
 ### 5.1 Data Splitting
 
 
-Prior to modelling, we will split the data into Training set and Testing set so that we can use the testing set to validate our model. As it is a good practice, we are splitting the dataset in to parts in the ratio of 70:30. Training set will be 70% percent of the original data. We will use the test dataset in the future for testing and prediction purposes. Objects with price equal to 0 will be ommited since price can’t be 0 (faulty records). In order to remove the outliers, we are filtering the airbnb data by removing the extreme values of price from both sides (10% from both the end).They would make predictive models significantly weaker. 
+Prior to modelling, we will split the data into Training set and Testing set so that we can used the testing set to validate our model. As, it is a good practice, we are splitting the dataset in to parts in the ratio of 70:30. Training set will be 70% percent of the original data. We will use the test dataset in the future for testing and prediction purposes. Objects with price equal to 0 will be ommited since price can’t be 0 (faulty records). In order to remove the outliers, we are filtering the airbnb data by removing the extreme values of price from both sides (10% from both the end).They would make predictive models significantly weaker. 
 
 
 ```{r remove the outliers in Price, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center',}
@@ -322,6 +319,7 @@ airbnb_filtered_data <- airbnb_data %>%
 ```
 
 
+As, it is a good practice, we are splitting the dataset in to parts in the ratio of 70:30. Training set will be 70% percent of the original data. Objects with price equal to 0 will be ommited since price can’t be 0 (faulty records). They would make predictive models significantly weaker. We will use the test dataset in the future for testing and prediction purposes.
 
 ```{r Splitting the Data for Training and Testing, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
 
@@ -349,16 +347,16 @@ nrow(airbnb_train) + nrow(airbnb_test) == nrow(airbnb_filtered_data %>% filter(p
 1. The resulting training dataset has 34,221 observations and testing dataset has 14.663 observations.
 2. Sanity check confirms that that after removing the observations with price 0 and splitting the dataset, the sum of observations in test and train dataset is equal to the total number of observations in the original dataset.
 
-In our model, we won't be considering the below variables and the reasons for the same are provided in the summary below. 
+IIn our model, we won't be considering the below variables as we don't think they can have any impact the prices of listings. We have taken neighbourhood group as one of our covariates thus we are excluding neighbourhood as well. We won't be taking last reveiw as well as it is a categorical variable with a high number of categories which will unnecessarity complicate our model. Moreover, we don't think it could be of much importance to our study, 
 
-***Summary of Variables Excluded:***
+Summary of Variables Excluded:
 
-* id: Unique Identifier, so not relevant to the study
-* name: Identifier, so not relevant to the study
-* host_id: Unique Identifier, so not relevant to the study
-* host_name: Identifier, so not relevant to the study
-* neighbourhood: Redundant variable as we are already taking neighbourhood_group in our study
-* last_review: categorical variable with a high number of categories, will unnecessarity complicate our model
+* id
+* name
+* host_id
+* host_name
+* neighbourhood
+* last_review
 
 Hence, we try to predict the **price** of the airbnbs using the remaining covariates:
 
@@ -380,6 +378,28 @@ Hence, we try to predict the **price** of the airbnbs using the remaining covari
 
 #### 5.2.1 1st Linear Regression Model
 
+In our model, we won't be considering the below variables as we don't think they can have any impact the prices of listings. We have taken neighbourhood group as one of our covariates thus we are excluding neighbourhood as well. We won't be taking last reveiw as well as it is a categorical variable with a high number of categories which will unnecessarity complicate our model. Moreover, we don't think it could be of much importance to our study, 
+
+Summary of Variables Excluded:
+
+* id
+* name
+* host_id
+* host_name
+* neighbourhood
+* last_review
+
+Hence, we try to predict the **price** of the airbnbs using the remaining covariates:
+
+* neighbourhood_group
+* latitude  
+* longitude  
+* room_type 
+* minimum_nights  
+* number_of_reviews 
+* reviews_per_month 
+* calculated_host_listings_count 
+* availability_365
 
 We will build our initial linear model using all the variables that we have selected for the study.
 ```{r 1st Linear Regression Model, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
@@ -419,17 +439,30 @@ plot(airbnb_model_1)
 ```
 <h3> Observations </h3>
 
-1. Residuals vs fitted values shows that the dots are not evenly distributed around zero and do not show a constant variance around X. This means that linearity and equal variance assumptions are not satisifed.
-2. QQ plot shows a 45 degree line meaning that Nomrality assumptions are met. 
+1. Residuals vs fitted values shows that the dots are not evenly distributed around zero and do not show a constant variance around X. This means that lenearity and equal variance assumptions are not satisifed.??
+2. QQ plot shows a 45 degree line meaning that Nomrality assumptions are met??
 
 
+<h2>3 Fold Cross Validation of the 1st Linear Model </h2>
+
+Next we perform a 3-fold cross-validation on the model.
+
+```{r cross validation 1st linear model, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
+
+KCV_model_1=cv.lm(data=airbnb_train, airbnb_model_1, m =3 )
+
+```
+
+
+<h3> Observations </h3>
+1. MSPE is 1662, Press value is 36722497, Prediction R-squared is 0.442.?
 
 ****
 
 
 #### 5.2.2 **Variable Selection Method** {.tabset .tabset-fade .tabset-pills}
 
-We will use both Subset regression method as well as step-wise regression for variable selection and see how the models differ in from each other.
+We will use both Subset regression method as well as step-wise regression for variable selection and see how they differ in their results.
 
 ##### **Best Subset Regression Method**
 ```{r Model Selection Method 1, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
@@ -448,8 +481,8 @@ plot(best_fit_model, scale="bic")
 
 <h3> Observations </h3>
 
-1. Using Section method with BIC, we find that the top 4 models have the same and lowest BIC. We will pick our covariates based on the model which has the highest adjusted R-squared and lowest MSPE.
-2. On doing the analysis in our test script, we find that the top most model is one with lowest MSPE and highest adjusted R-Squared.
+1. Using Section method with BIC, we find that the top 4 models have the same and lowest BIC. We will pick our covariates based on the model which has the 2. highest adjusted R-squared and lowest MSPE.
+2. On doing the analysis in our test script, we find that the top most model is one with lowest MSPE and highest e top 4 models have the same and owest BIC. We will pick our covariates based on the model which has the highest and thus we will go with that one.
 3. Based on the results, the covariates that we have to select here are:
 
 * neighbourhood_group
@@ -623,7 +656,8 @@ coef(lasso_fit,s = lasso_fit$lambda.min)
 
 ```
 
-The covariates given out by this fit are:
+<h3> Observations </h3>
+The covariates given out by this model are :
 
 * latitude                        
 * longitude                      
@@ -633,7 +667,7 @@ The covariates given out by this fit are:
 * calculated_host_listings_count  
 * availability_365           
 
-Hence, we will build a Model using these covariates
+Hence, Building a Model using this covariates
 ```{r Lasso Fit Model 6,  echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', results='markup' }
 
 airbnb_model_6 <- lm(price ~ latitude + longitude + minimum_nights + number_of_reviews + reviews_per_month + calculated_host_listings_count + availability_365,
@@ -674,7 +708,7 @@ plot(cv_lasso_fit)
 
 ### 5.3. Model Selection
 
-In order to pick a model from the ones that we have built, we will do a comparison MSPE and adjusted R-squared of all the models and choose the model with the best combination of both.
+In order to pick a model from  the ones that we have built, we will do a comparison of all the models.
 
 
 <h2> Comparison of all the Models: </h2>
@@ -693,7 +727,7 @@ kable(model_sum) %>%
 <h3> Observations </h3>
 
 1. The model built using Lasso Regression is the least desirable one as it has the lowest adjusted R-squared and highest MSE value.
-2. The linear model built using stepwise regression using both AIC and BIC have the best combination of MSE and Adjusted R-squared and these values are same for both of them. However, we are selecting the ``` **Model 5** (stepwise regression using BIC)``` as BIC is considered to be more **Conservative** and it gives the Lesser number of Variables when compared to AIC, thus making the model more interpretable.
+2. The linear model built using stepwise regression using both AIC and BIC have the best combination of MSE and Adjusted R-squared and these values are same for both of them. However, we are selecting the ``` **Model 5** (stepwise regression using BIC)``` as BIC is considered to be more **Conservative** and it gives the Lesser number of Variables when compared to AIC.
 
 <h2> Summary of Model 5 </h2>
 ```{r BIC Model 5 Selected, echo=TRUE,  message=FALSE, warning=FALSE, fig.align='center', }
@@ -774,70 +808,15 @@ model_glm_1 = glm(price~neighbourhood_group + latitude + longitude + room_type +
 cv.glm(data =airbnb_filtered_data, glmfit = model_glm_1, K = 3)$delta[2]
 ```
 
-Comparing the MSE of Test Dataset which is equal to 1633, and the MSPE of the Full Data which is 1646, we can see that the values are almost similar. Hence the variables that we have selected for our model are good estimators of our dependent variable.
+Comparing the MSE of Test Dataset which is equal to 1633, and the MSPE of the Full Data which is 1646, we can see that the values are almost similar. Hence The Model selected is a good Model.
 
 
 ## 6. **Conclusion**
 
-<h3> Summary of the problem: </h3>
+<h2> Final Equation </h2>
 
-To Analyze the New York Air Bnb dataset and find the interesting insights related to the factors that affect the prices of listing in New York city. We tried to answer the following questions using our analysis:
-
-
-	
-* How are rental properties distributed across the neighborhoods of NYC?
-* How do prices vary with respect to other factors?
+Final Model is Model 5 Obtained by Stepwise Regression - BIC. 
 
 
-Date Used and Methodology: The data is collected from an online data-source [**Kaggle**](https://www.kaggle.com/).
 
-
-<h3> Methodology: </h3>
-
-We used multiple regression method to create a model that would help predict prices of listing based on relevant factors. We started with importing and cleaning the data followed by exploratory analysis to gain some interesting insights.  For model building, we decided to split the dataset into training and testing datasets in the ratio of 70:30. We created an initial model using all the variables we thought were relevant, followed by building models using 4 different variable selections methods i.e. stepwise-regression methods (using AIC and BIC both), regression subset method and Lasso regression methods. MSE, R^2, Adj R^2  of these 5 models were then compared in order to pick the best model. Next, we performed in-sample validation, out-sample prediction and cross-validation techniques on the final selected model. Upon validation, we found that the MSPE of Test Dataset i.e. 1633 is almost similar to the MSPE of the Full Data i.e. 1646. Hence, we could conclude that the Model selected for analysis, predicts the variable with a good fit. 
-
-Interesting insights from Analysis The above analysis helped us understand the New York Air Bnb dataset better. Following insights were drawn from it:
-
-
-	
-* Private room is the most common listing type in all neighborhoods except Manhattan where Entire Home/apartment is the most common type.
-* Shared room is the least common type of listings.
-*	Average price of listings is the highest for Manhattan followed by Brooklyn. 
-*	Bronx has the cheapest listings with an average price of 87.5 USD.
-*	Average price is the highest for Entire home/apartment followed by private room and shared room.
-*	The factors that impact listing prices are:
-	  * room_type
-		* neighbourhood_group
-		* longitude
-		* availability_365
-		* minimum_nights
-		* calculated_host_listings_count
-		* latitude
-		* number_of_reviews
-		* reviews_per_month
-	
-
-<h3> Implications from the analysis: </h3>
-
-This information can be really helpful for multiple categories of the society such as tourists, house owners, real estate agents etc. It can help customers decide which neighborhoods they should look into depending on their needs and house owners can decide on the prices they set on the listings taking all these factors into consideration.
-
-<h3> Final Model </h3>
-
-The Final Model selected was ```Model 5```. This Model was selected by ```Stepwise Regression using BIC (direction : both)```. The Observations of the Model:
-
-
-* MSE:  1651
-* R-squared: 0.446 
-* Adjusted R-squared: 0.446 
-
-<h3> The Covariates in the Model </h3>
-
-* room_type
-* neighbourhood_group
-* longitude
-* availability_365
-* minimum_nights
-* calculated_host_listings_count
-* latitude
-* number_of_reviews
-* reviews_per_month
+price = -1.47e+04 + (-6.16e+01) * RoomTypePrivateRoom + (-7.45e+01) * RoomTypeSharedRoom + (-7.08e+00) * NeighbourhodGroupBrooklyn + (1.68e+01) * NeighbourhodGroupManhattan + (3.64e+00) * NeighbourhodGroupQueens + (-7.20e+01) * NeighbourhoodGroupStatenIsland + (-2.43e+02) * Longitude + (4.37e-02) * Availability_365 + (-1.92e-01) * MinimumNights + (-7.72e+01) * Latitude + (1.06e-01) * CalculatedHostListingsCount + (-2.48e-02) * NumberOfReviews + (-8.30e-02) * ReviewsPerMonth
