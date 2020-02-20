@@ -1,4 +1,4 @@
-# New York AirBnB Analysis and Modelling
+# New York AirBnB Regression Analysis and Modelling
 
 ## RPubs: https://rpubs.com/SayakChakraborty/NewYorkAirBnB_Modelling
 
