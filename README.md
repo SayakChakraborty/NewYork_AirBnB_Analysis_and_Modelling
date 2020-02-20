@@ -10,8 +10,8 @@ In this project, we also try to predict the factors that affect the pricing of t
 
 We carried out the project in the following steps:
 
-Data Cleaning and Preparation
-Data Visualization
-Modelling and Model Checking
-Finalising the Model
-Prediction using the Final Model.
+* Data Cleaning and Preparation
+* Data Visualization
+* Modelling and Model Checking
+* Finalising the Model
+* Prediction using the Final Model.
