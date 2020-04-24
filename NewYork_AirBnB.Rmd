@@ -1,6 +1,6 @@
 ---
-title: "<center><b> New York AirBnB <br> Exploratory Data Analysis and Modelling </b></center>"
-subtitle: "<center><b> Price Prediction for AirBnbs in New York </b></center>"
+title: <center><b> New York AirBnB <br> Regression Analysis, Visualization and Modelling </b></center>
+subtitle: <center><b> Price Prediction for AirBnbs in New York </b></center>
 author: <center> Sayak Chakraborty | Samreen Zehra | Niharika Gupta | Rohit Thakur </center>
 output:
   html_document: 
@@ -10,8 +10,38 @@ always_allow_html: yes
 
 <style>
 body {
-        text-align: justify
+        text-align: justify;
+        font-family: "Bookman", Bookman;
+        font-size: 15pt;
      }
+</style>
+
+<style>
+
+h1 {
+  color: #2100A4
+  font-family: Bookman;
+}
+
+h2 {
+  color: #2100A4;
+  font-family: Bookman;
+}
+
+h3 {
+  color: #2100A4;
+  font-family: Bookman;
+}
+
+h4 {
+  color: #2100A4;
+  font-family: Bookman;
+}
+
+a, a:hover {
+    color: #C70039 ;
+}
+
 </style>
 
 # {.tabset .tabset-fade .tabset-pills}
