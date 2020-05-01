@@ -97,7 +97,7 @@ The packages used can be found in a tabular format below. The table also describ
 
 ```{r displaying the packages table, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 #Reading the variable summary excel File
-package_summary <- read_excel("Package_Summary.xlsx")
+package_summary <- read_excel("Excel Files/Package_Summary.xlsx")
 
 kable(package_summary) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F, fixed_thead = T, )
@@ -192,7 +192,7 @@ datatable(head(airbnb_data, 20), class = 'cell-border stripe')
 ```{r displaying the summary variables table, echo=FALSE,  message=FALSE, warning=FALSE, fig.align='center', results='hide'}
 
 #Reading the variable summary excel File
-var_sum <- read_excel("variable_summary.xlsx")
+var_sum <- read_excel("Excel Files/variable_summary.xlsx")
 
 kable(var_sum) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F, fixed_thead = T, )
@@ -688,7 +688,7 @@ In order to pick a model from the ones that we have built, we will do a comparis
 
 
 #Reading the variable summary excel File
-model_sum <- read_excel("Model_Comparison.xlsx")
+model_sum <- read_excel("Excel Files/Model_Comparison.xlsx")
 
 kable(model_sum) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F, fixed_thead = T, )
